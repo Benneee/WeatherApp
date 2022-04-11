@@ -3,7 +3,9 @@ venv
 site.db
 .DS_STORE
 .flaskenv
-app.db
+weather.db
 logs
 messages.pot
 .env
+app.db
+migrations
