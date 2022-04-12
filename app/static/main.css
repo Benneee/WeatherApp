@@ -1,9 +1,5 @@
 body {
-    background: url('./images/weather-bg.jpeg') no-repeat;
-    overflow: hidden;
-    background-size: cover;
-    width: 100%;
-    height: 100vh;
+    background: linear-gradient(0.25turn, #5b7f85, #C06C01);
     font-family: 'Kodchasan', sans-serif;
 }
 
