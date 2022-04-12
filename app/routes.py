@@ -1,16 +1,14 @@
-from flask import render_template, redirect, url_for
-import requests
-from app import app
+from flask import redirect, render_template, url_for, request, flash
+from app import app, db
+from app.helpers import get_weather_data
+from app.models import City
 
-
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET'])
 def index():
     title = "Weather App"
     city = 'Lagos'
     weather_data_list = []
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=0c221817ce583131b5d1bda6fbda6205'
-    weather = requests.get(url).json()
+    weather = get_weather_data(city)
 
     weather_data = {
         'icon': weather['weather'][0]['icon'],
@@ -21,5 +19,32 @@ def index():
         'humidity': weather['main']['humidity'],
         'wind': weather['wind']['speed']
     }
+
     weather_data_list.append(weather_data)
     return render_template('index.html', title=title, weather_data=weather_data_list)
+
+
+@app.route('/', methods=['POST'])
+def add_new_weather_data():
+    city_to_add = request.form.get('city')
+
+    if city_to_add:
+        # First, we check if the city was already in the DB
+        city = City.query.filter_by(name=city_to_add).first()
+        
+        if not city:
+            # Now check if city is an actual city
+            weather = get_weather_data(city_to_add)
+            if weather['cod'] == 200:
+                # add city to DB
+                new_city = City(name=city_to_add)
+                db.session.add(new_city)
+                db.session.commit()
+                flash('City added successfully!', category="success")
+            else:
+                flash('City entered is not a real city in the world!', category="error")
+        else:
+            # city already exists in the DB, so we don't add it
+            flash('City already exists!', category="error")
+
+    return redirect(url_for('index'))
