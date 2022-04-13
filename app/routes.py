@@ -19,7 +19,8 @@ def index():
             'location': weather['name']+', '+weather['sys']['country'],
             'feels_like': round((weather['main']['feels_like'] - 273), 2),
             'humidity': weather['main']['humidity'],
-            'wind': weather['wind']['speed']
+            'wind': weather['wind']['speed'],
+            'city': weather['name']
         }
         weather_data_list.append(weather_data)
 
@@ -49,4 +50,13 @@ def add_new_weather_data():
             # city already exists in the DB, so we don't add it
             flash('City already exists!', category="danger")
 
+    return redirect(url_for('index'))
+
+
+@app.route('/city/<string:name>')
+def delete_weather_data(name):
+    city = City.query.filter_by(name=name).first()
+    db.session.delete(city)
+    db.session.commit()
+    flash('City deleted successfully!', category="success")
     return redirect(url_for('index'))

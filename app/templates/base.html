@@ -72,6 +72,10 @@
         $('#cityForm').one('submit', function() {
             $(this).find('button[type="submit"]').attr('disabled','disabled');
         });
+
+        $(".modal-footer").one('click', function () {
+            $(this).find("a#deletecity").attr("disabled", "disabled");
+        });
     </script>
 </body>
 </html>
