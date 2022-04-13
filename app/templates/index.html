@@ -39,19 +39,31 @@
     </header>
 
     <section class="container">
-        <div class="row mt-5">
+        <div class="row my-5">
             <div class="col-md-6 offset-md-3 col-12">
-                <form method="POST">
+                <form method="POST" id="cityForm">
                     <input type="text" name="city" placeholder="Enter city" class="form-input">
-                    <button class="btn btn-primary weather-btn mb-1">Get Weather</button>
+                    <button type="submit" class="btn btn-primary weather-btn mb-1">Get Weather</button>
                 </form>
             </div>
         </div>
+        
+        <!-- The alert -->
+
+        {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
 
         <!-- Cards -->
         <div class="row mt-5 py-3">
             {% for weather in weather_data %}
-                <div class="col-md-4 mb-md-0 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="card bg-dark">
                         <div class="card-body">
                             <div class="row text-light">
@@ -105,5 +117,27 @@
             {% endfor %}
         </div>
     </section>
+
+
+        <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    ></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    ></script>
+    <script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    ></script>
+    <script>
+        setTimeout(function() {
+            $('.alert').remove();
+        }, 5000);
+
+        $('#cityForm').one('submit', function() {
+            $(this).find('button[type="submit"]').attr('disabled','disabled');
+        });
+    </script>
 </body>
 </html>

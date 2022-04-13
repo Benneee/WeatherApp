@@ -6,22 +6,24 @@ from app.models import City
 @app.route('/', methods=['GET'])
 def index():
     title = "Weather App"
-    city = 'Lagos'
     weather_data_list = []
-    weather = get_weather_data(city)
+    cities = City.query.all()
 
-    weather_data = {
-        'icon': weather['weather'][0]['icon'],
-        'description': weather['weather'][0]['description'],
-        'temp': round((weather['main']['temp'] - 273), 2),
-        'location': weather['name']+', '+weather['sys']['country'],
-        'feels_like': round((weather['main']['feels_like'] - 273), 2),
-        'humidity': weather['main']['humidity'],
-        'wind': weather['wind']['speed']
-    }
+    for city in cities:
+        weather = get_weather_data(city.name)
 
-    weather_data_list.append(weather_data)
-    return render_template('index.html', title=title, weather_data=weather_data_list)
+        weather_data = {
+            'icon': weather['weather'][0]['icon'],
+            'description': weather['weather'][0]['description'],
+            'temp': round((weather['main']['temp'] - 273), 2),
+            'location': weather['name']+', '+weather['sys']['country'],
+            'feels_like': round((weather['main']['feels_like'] - 273), 2),
+            'humidity': weather['main']['humidity'],
+            'wind': weather['wind']['speed']
+        }
+        weather_data_list.append(weather_data)
+
+    return render_template('index.html', title=title, weather_data=reversed(weather_data_list))
 
 
 @app.route('/', methods=['POST'])
@@ -42,9 +44,9 @@ def add_new_weather_data():
                 db.session.commit()
                 flash('City added successfully!', category="success")
             else:
-                flash('City entered is not a real city in the world!', category="error")
+                flash('City entered is not a real city in the world!', category="danger")
         else:
             # city already exists in the DB, so we don't add it
-            flash('City already exists!', category="error")
+            flash('City already exists!', category="danger")
 
     return redirect(url_for('index'))
