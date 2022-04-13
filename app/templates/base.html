@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+
+    <link
+        rel="stylesheet"
+        type="text/css"
+        href="{{ url_for('static', filename='main.css') }}"
+    />
+
+    <!-- Google Fonts link -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css?family=Kodchasan:wght@600&display=swap"
+        rel="stylesheet"
+    />
+    {% if title %}
+        <title> {{ title }} </title>
+    {% else %} 
+        <title>Weather App</title>
+    {% endif %}
+</head>
+<body>
+    <header>
+        <nav class="bg-dark navbar py-4">
+            <h3 class="heading text-light">
+                The Weather App
+            </h3>
+        </nav>
+    </header>
+
+    <div class="container mt-2">
+        <!-- The alert -->
+        {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    {% block content %}{% endblock content %}
+
+        <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    ></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    ></script>
+    <script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    ></script>
+    <script>
+        setTimeout(function() {
+            $('.alert').remove();
+        }, 5000);
+
+        $('#cityForm').one('submit', function() {
+            $(this).find('button[type="submit"]').attr('disabled','disabled');
+        });
+    </script>
+</body>
+</html>
