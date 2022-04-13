@@ -1,42 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
-    <link
-        rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
-
-    <link
-        rel="stylesheet"
-        type="text/css"
-        href="{{ url_for('static', filename='main.css') }}"
-    />
-
-    <!-- Google Fonts link -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css?family=Kodchasan:wght@600&display=swap"
-        rel="stylesheet"
-    />
-    {% if title %}
-        <title> {{ title }} </title>
-    {% else %} 
-        <title>Weather App</title>
-    {% endif %}
-</head>
-<body>
-    <header>
-        <nav class="bg-dark navbar py-4">
-            <h3 class="heading text-light">
-                The Weather App
-            </h3>
-        </nav>
-    </header>
+{% extends "base.html" %}
+{% block content %}
 
     <section class="container">
         <div class="row my-5">
@@ -47,97 +10,13 @@
                 </form>
             </div>
         </div>
-        
-        <!-- The alert -->
-
-        {% with messages = get_flashed_messages(with_categories = true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
 
         <!-- Cards -->
         <div class="row mt-5 py-3">
             {% for weather in weather_data %}
-                <div class="col-md-4 mb-3">
-                    <div class="card bg-dark">
-                        <div class="card-body">
-                            <div class="row text-light">
-                                <div class="col-3">
-                                    <div class="mx-auto text-center">
-                                        <img src="http://openweathermap.org/img/w/{{ weather['icon'] }}.png" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-9 text-right">
-                                    <h4 class="text-capitalize"> {{ weather['description'] }} </h4>
-                                    <h1 class="temp">{{ weather['temp'] }}°C</h1>
-                                    <h5> {{ weather['location'] }} </h5>
-                                </div>
-                            </div>
-                            <div class="row mt-3 py-2 text-dark bg-light">
-                                <div class="col-6">
-                                    <p>
-                                        Feels like
-                                    </p>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <p>
-                                        {{ weather['feels_like'] }}°C
-                                    </p>
-                                </div>
-
-                                <div class="col-6">
-                                    <p>
-                                        Humidity
-                                    </p>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <p>
-                                        {{ weather['humidity'] }}%
-                                    </p>
-                                </div>
-                                <div class="col-6">
-                                    <p>
-                                        Wind
-                                    </p>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <p>
-                                        {{ weather['wind'] }}mph
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include '_weathercard.html' %}
             {% endfor %}
         </div>
     </section>
 
-
-        <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    ></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    ></script>
-    <script
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    ></script>
-    <script>
-        setTimeout(function() {
-            $('.alert').remove();
-        }, 5000);
-
-        $('#cityForm').one('submit', function() {
-            $(this).find('button[type="submit"]').attr('disabled','disabled');
-        });
-    </script>
-</body>
-</html>
+{% endblock content %}
